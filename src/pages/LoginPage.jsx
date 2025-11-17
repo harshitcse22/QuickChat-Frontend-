@@ -1,5 +1,6 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import assets from '../assets/assets'
+import { AuthContext } from '../../context/AuthContext'
 
 const LoginPage = () => {
 
@@ -10,6 +11,8 @@ const LoginPage = () => {
     const [bio, setBio] = useState("")
     const [isDataSubmitted, setIsDataSubmitted] = useState(false);
 
+    const {login} = useContext(AuthContext)
+
     const onSubmitHandler = (event) =>{
         event.preventDefault();
 
@@ -17,6 +20,9 @@ const LoginPage = () => {
            setIsDataSubmitted(true)
            return;
         }
+
+        login(currState === "Sign Up" ? 'signup' : 'login', {fullName, email, password,
+          bio})
     }
 
   return (
@@ -28,7 +34,7 @@ const LoginPage = () => {
       
         {/** ------ right ----- */}
 
-        <form onClick={onSubmitHandler} className='border-2 bg-white/8 text-white border-gray-500 p-6 flex
+        <form onSubmit={onSubmitHandler} className='border-2 bg-white/8 text-white border-gray-500 p-6 flex
           flex-col gap-6 rounded-lg shadow-lg'>
           <h2 className='font-medium text-2xl flex justify-between items-center'>
             {currState}
@@ -56,7 +62,7 @@ const LoginPage = () => {
 
                {
                 currState === "Sign Up" && isDataSubmitted && (
-                   <textarea rows={4} className='p-2 border border-gray-500 rounded-md
+                   <textarea onChange={(e) => setBio(e.target.value)} value={bio} rows={4} className='p-2 border border-gray-500 rounded-md
                      focus:outline-none focus:ring-2 focus:ring-indigo-500'
                      placeholder='provide a short bio... ' required></textarea>
                 )
